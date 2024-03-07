@@ -1,0 +1,8 @@
+.rich-text-display {
+    white-space: normal;
+}
+
+.rich-text-display img {
+    max-width: 100%;
+    height: auto;
+}

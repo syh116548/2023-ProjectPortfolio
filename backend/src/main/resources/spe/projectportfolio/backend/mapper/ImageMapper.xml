@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spe.projectportfolio.backend.mapper.ImageMapper">
+
+    <select id="findAll" resultType="spe.projectportfolio.backend.pojo.Image">
+        SELECT *
+        FROM Image
+    </select>
+
+    <select id="findById" resultType="spe.projectportfolio.backend.pojo.Image">
+        SELECT *
+        FROM Image
+        WHERE ImageID=#{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="imageId" keyColumn="ImageID">
+        INSERT INTO Image(Data, `Type`)
+        VALUES (#{data}, #{type})
+    </insert>
+
+    <update id="update">
+        UPDATE Image
+        <set>
+            <if test="data != null">Data = #{data},</if>
+            <if test="type != null">`Type` = #{type}</if>
+        </set>
+        WHERE ImageID = #{imageId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM Image
+        WHERE ImageID=#{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE FROM Image
+        WHERE ImageID IN
+        <foreach collection="ids " item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

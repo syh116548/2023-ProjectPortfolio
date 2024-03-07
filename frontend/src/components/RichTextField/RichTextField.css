@@ -1,0 +1,49 @@
+@import "react-quill/dist/quill.snow.css";
+
+.ql-editor {
+    min-height: 8em;
+}
+
+/* Toolbar */
+.ql-snow.ql-toolbar {
+    border-radius: 5px 5px 0px 0px;
+}
+
+/* Text box */
+.ql-container {
+    font-family: Roboto, sans-serif;
+    border-radius: 0px 0px 5px 5px;
+    font-size: 16px;
+}
+
+/* Placeholder text */
+.ql-editor.ql-blank::before {
+    font-style: normal;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+/* Hover */
+.editor:hover > .ql-snow.ql-toolbar {
+    border-top-color: black;
+    border-left-color: black;
+    border-right-color: black;
+}
+.editor:hover > .ql-container {
+    border-bottom-color: black;
+    border-left-color: black;
+    border-right-color: black;
+}
+
+/* Focus */
+.editor:focus-within > .ql-snow.ql-toolbar {
+    border-width: 2px 2px 1px 2px;
+    border-top-color: black;
+    border-left-color: black;
+    border-right-color: black;
+}
+.editor:focus-within > .ql-container {
+    border-width: 1px 2px 2px 2px;
+    border-bottom-color: black;
+    border-left-color: black;
+    border-right-color: black;
+}

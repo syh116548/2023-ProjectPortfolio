@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spe.projectportfolio.backend.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="spe.projectportfolio.backend.pojo.User">
+        <id property="userId" column="UserID" />
+        <result property="email" column="Email" />
+        <result property="firstName" column="FirstName" />
+        <result property="lastName" column="LastName" />
+        <result property="role" column="Role" />
+        <result property="editPermission" column="HasEditPermission" />
+        <result property="admin" column="IsAdmin" />
+        <result property="password" column="Password" />
+    </resultMap>
+
+    <select id="findAll" resultMap="userResultMap">
+        SELECT *
+        FROM `User`
+    </select>
+
+    <select id="findById" resultMap="userResultMap">
+        SELECT *
+        FROM `User`
+        WHERE UserID=#{id}
+    </select>
+
+    <select id="findByEmail" resultMap="userResultMap">
+        SELECT *
+        FROM `User`
+        WHERE Email=#{email}
+    </select>
+
+    <select id="findByCondition" resultMap="userResultMap">
+        SELECT *
+        FROM `User`
+        <where>
+            <if test="search != null">
+                (Email LIKE CONCAT('%', #{search}, '%')
+                OR FirstName LIKE CONCAT('%', #{search}, '%')
+                OR LastName LIKE CONCAT('%', #{search}, '%'))
+            </if>
+
+            <if test="email != null">
+                AND Email LIKE CONCAT('%', #{email}, '%')
+            </if>
+
+            <if test="firstName != null">
+                AND FirstName LIKE CONCAT('%', #{firstName}, '%')
+            </if>
+
+            <if test="lastName != null">
+                AND LastName LIKE CONCAT('%', #{lastName}, '%')
+            </if>
+
+            <if test="role != null">
+                AND Role = #{role}
+            </if>
+
+            <if test="editPermission != null">
+                AND HasEditPermission = #{editPermission}
+            </if>
+
+            <if test="admin != null">
+                AND IsAdmin = #{admin}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty = "userId" keyColumn = "UserID">
+        INSERT INTO `User`(Email, FirstName, LastName, Role, HasEditPermission, IsAdmin, Password)
+        VALUES (#{email}, #{firstName}, #{lastName}, #{role}, #{editPermission}, #{admin}, #{password})
+    </insert>
+
+    <update id="update">
+        UPDATE `User`
+        <set>
+            <if test="email != null">Email = #{email},</if>
+            <if test="firstName != null">FirstName = #{firstName},</if>
+            <if test="lastName != null">LastName = #{lastName},</if>
+            <if test="role != null">Role = #{role},</if>
+            <if test="editPermission != null">HasEditPermission = #{editPermission},</if>
+            <if test="admin != null">IsAdmin = #{admin},</if>
+            <if test="password != null">Password = #{password}</if>
+        </set>
+        WHERE UserID = #{userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM `User`
+        WHERE UserID=#{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE FROM `User`
+        WHERE UserID IN
+        <foreach collection="ids " item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

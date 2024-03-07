@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spe.projectportfolio.backend.mapper.CaseStudyMapper">
+
+    <select id="findAll" resultType="spe.projectportfolio.backend.pojo.CaseStudy">
+        SELECT *
+        FROM CaseStudy
+    </select>
+
+    <select id="findById" resultType="spe.projectportfolio.backend.pojo.CaseStudy">
+        SELECT *
+        FROM CaseStudy
+        WHERE CaseStudyID = #{id}
+    </select>
+
+    <select id="findByGlobalSearch" resultType="spe.projectportfolio.backend.pojo.CaseStudy">
+        SELECT *
+        FROM CaseStudy
+        WHERE LOWER(Title) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(ClientName) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(Industry) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(ProjectType) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(Summary) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(TeamMembers) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(AdvanceLink) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(ProblemDescription) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(SolutionDescription) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(Outcomes) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(ToolsUsed) LIKE LOWER(CONCAT('%', #{search}, '%'))
+           OR LOWER(ProjectLearnings) LIKE LOWER(CONCAT('%', #{search}, '%'))
+    </select>
+
+
+    <select id="findByCondition" resultType="spe.projectportfolio.backend.pojo.CaseStudy">
+        SELECT *
+        FROM CaseStudy
+        <where>
+            <if test="title != null">
+                Title LIKE CONCAT('%', #{title}, '%')
+            </if>
+
+            <if test="clientName != null">
+                AND ClientName LIKE CONCAT('%', #{clientName}, '%')
+            </if>
+
+            <if test="industry != null">
+                AND Industry LIKE CONCAT('%', #{industry}, '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty = "caseStudyId" keyColumn = "CaseStudyID">
+        INSERT INTO CaseStudy(Title, ProjectStatus, EditStatus, ClientName, ClientLink, ClientLogoID, Industry, ProjectType, StartDate, EndDate,
+                              Summary, TeamMembers, AdvanceLink, ProblemDescription, SolutionDescription, Outcomes, ToolsUsed,
+                              ProjectLearnings)
+        VALUES (#{title}, #{projectStatus}, #{editStatus}, #{clientName}, #{clientLink}, #{clientLogoId}, #{industry}, #{projectType}, #{startDate},
+                #{endDate}, #{summary}, #{teamMembers}, #{advanceLink}, #{problemDescription}, #{solutionDescription}, #{outcomes},
+                #{toolsUsed}, #{projectLearnings})
+    </insert>
+
+    <update id="update">
+        UPDATE CaseStudy
+        <set>
+            <if test="title != null">Title = #{title},</if>
+            <if test="projectStatus != null">ProjectStatus = #{projectStatus},</if>
+            <if test="editStatus != null">EditStatus = #{editStatus},</if>
+            <if test="clientName != null">ClientName = #{clientName},</if>
+            <if test="clientLink != null">ClientLink = #{clientLink},</if>
+            <if test="clientLogoId != null">ClientLogoID = #{clientLogoId},</if>
+            <if test="industry != null">Industry = #{industry},</if>
+            <if test="projectType != null">ProjectType = #{projectType},</if>
+            <if test="startDate != null">StartDate = #{startDate},</if>
+            <if test="endDate != null">EndDate = #{endDate},</if>
+            <if test="summary != null">Summary = #{summary},</if>
+            <if test="teamMembers != null">TeamMembers = #{teamMembers},</if>
+            <if test="advanceLink != null">AdvanceLink = #{advanceLink},</if>
+            <if test="problemDescription != null">ProblemDescription = #{problemDescription},</if>
+            <if test="solutionDescription != null">SolutionDescription = #{solutionDescription},</if>
+            <if test="outcomes != null">Outcomes= #{outcomes},</if>
+            <if test="toolsUsed != null">ToolsUsed = #{toolsUsed},</if>
+            <if test="projectLearnings != null">ProjectLearnings = #{projectLearnings}</if>
+        </set>
+        WHERE CaseStudyID = #{caseStudyId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM CaseStudy
+        WHERE CaseStudyID=#{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE FROM CaseStudy
+        WHERE CaseStudyID IN
+        <foreach collection="ids " item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
