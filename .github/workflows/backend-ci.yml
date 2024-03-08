@@ -1,20 +1,42 @@
-name: Backend CI
+# This is a CICD workflow for demo
+name: cicd-demo
 
-on: [push, pull_request]
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the below branch and specific path
+on:
+  push:
+    branches:
+    - main
+    - develop
+    paths:
+      - 'demo-app/**'
+  pull_request:
+    branches:
+    - main
+    paths:
+      - 'demo-app/**'
 
 jobs:
-  build-and-test:
+# The "build" job
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.build_app.outputs.image_tag }}
+      actor: ${{ steps.build_app.outputs.actor }}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE
+    - name: checkout repo
+      uses: actions/checkout@v3
 
-steps:
-  - uses: actions/checkout@v4
-  - uses: actions/setup-java@v3
-    with:
-      java-version: '17'
-      distribution: 'temurin'
-  - run: mvn --batch-mode --update-snapshots verify
-  - run: mkdir staging && cp target/*.jar staging
-  - uses: actions/upload-artifact@v4
-    with:
-      name: Package
-      path: staging
+    - name: build application
+      id: build_app
+      run: |-
+        VER=`cat demo-app/Makefile| grep TAG= | awk -F "=" 'NR==1{print $2}'`
+        GIT_COMMIT=$(git log | grep commit | awk 'NR==1{print $2}' | cut -c1-7) 
+        cd helm-go-client
+        make push TAG2=-$GIT_COMMIT
+        # set output
+        echo "::set-output name=image_tag::$(echo "$VER-$GIT_COMMIT")"
+        echo "::set-output name=actor::$(echo "$GITHUB_ACTOR")"
